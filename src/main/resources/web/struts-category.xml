@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="category" extends="struts-default" namespace="/category">
+        <interceptors>
+            <interceptor name="myInterceptor" class="com.interceptor.MyBackInterceptor"></interceptor>
+            <interceptor-stack name="myDefaultStack">
+                <interceptor-ref name="myInterceptor"></interceptor-ref>
+                <interceptor-ref name="defaultStack"></interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+        <!-- 默认所有的action默认引用拦截器 -->
+        <default-interceptor-ref name="myDefaultStack"></default-interceptor-ref>
+        <global-results>
+            <result name="login" type="redirect">/back/login.jsp</result>
+        </global-results>
+            <action name="*" class="com.web.CategoryAction" method="{1}">
+                <result name="{1}">/back/category/{1}.jsp</result>
+                <result name="addSecondView">/back/category/addSecond.jsp</result>
+                <result name="addSecond" type="redirectAction">show</result>
+                <result name="delete" type="redirectAction">show</result>
+                <result name="addFirst" type="redirect">show</result>
+            </action>
+    </package>
+</struts>

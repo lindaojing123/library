@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="user" extends="struts-default" namespace="/user">
+        <interceptors>
+            <interceptor name="myInterceptor" class="com.interceptor.MyBackInterceptor"></interceptor>
+            <interceptor-stack name="myDefaultStack">
+                <interceptor-ref name="myInterceptor"></interceptor-ref>
+                <interceptor-ref name="defaultStack"></interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+        <!-- 默认所有的action默认引用拦截器 -->
+        <default-interceptor-ref name="myDefaultStack"></default-interceptor-ref>
+        <global-results>
+            <result name="login" type="redirect">/back/login.jsp</result>
+        </global-results>
+        <action name="*"  class="com.web.UserAction" method="{1}">
+               <result name="{1}">/back/user/{1}.jsp</result>
+               <result name="update" type="chain">show</result>
+        </action>
+    </package>
+
+    <package name="userView" extends="struts-default" namespace="/userView">
+        <action name="*" class="com.web.UserAction" method="{1}">
+            <result name="{1}">/front/user/{1}.jsp</result>
+            <result name="leaveOut">/front/user/loginForm.jsp</result>
+        </action>
+        <action name="login" class="com.web.UserAction" method="login">
+            <result name="login" type="redirect" >
+                <!-- 重定向跳转，get拼接传参 -->
+                <param name="location" >/front/user/loginForm.jsp</param>
+                <!-- /login.jsp?errorMsg=验证账户信息失败 -->
+                <param name="errorMsg">验证账户信息失败！~</param>
+            </result>
+            <result name="success" type="redirectAction">
+                <param name="namespace">/main</param>
+                <param name="actionName">show</param>
+            </result>
+        </action>
+
+        <action name="verifyForm" class="com.web.UserAction" method="verifyForm">
+            <result name="ok">/front/user/verifyForm.jsp</result>
+            <result name="false">/front/user/registerForm.jsp</result>
+        </action>
+    </package>
+</struts>

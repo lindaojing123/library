@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.CategoryDao">
+
+    <resultMap id="categoryMap" type="Category">
+        <id column="pid" property="id"/>
+        <result column="cname" property="name"/>
+        <result column="clevels" property="levels"/>
+        <collection property="categories" ofType="Category" >
+            <id column="id" property="id"/>
+            <result column="name" property="name"/>
+            <result column="levels" property="levels"></result>
+        </collection>
+    </resultMap>
+
+    <resultMap id="categoryMap2" type="Category">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="levels" property="levels"/>
+        <association property="categoryParent" javaType="Category" >
+            <id column="cid" property="id"/>
+            <result column="cname" property="name"/>
+            <result column="clevels" property="levels"/>
+        </association>
+    </resultMap>
+
+    <select id="selectAllList" resultMap="categoryMap">
+       select c1.id id,c1.cate_name name,c1.levels levels,c1.parent_id pid,c2.id cid,c2.cate_name cname,
+       c2.levels clevels from t_category c1 left join t_category c2 on c1.parent_id = c2.id order by c1.levels asc
+    </select>
+
+    <insert id="addFirst" useGeneratedKeys="true" >
+       insert into t_category(cate_name,levels,parent_id)values (#{category},1,0)
+    </insert>
+
+    <select id="getCategory1" resultType="Category">
+       select id,cate_name name,levels from t_category where parent_id=0
+    </select>
+
+    <insert id="addSecond" useGeneratedKeys="true" keyProperty="id">
+        insert into t_category(cate_name,levels,parent_id)
+        values(#{name},2,#{categoryParent.id})
+    </insert>
+
+    <select id="getCategory2" resultType="Category">
+       select id,cate_name name,levels from t_category where levels=2
+    </select>
+
+    <select id="getTotalSize" resultType="java.lang.Integer">
+        select count(*) from t_category
+    </select>
+
+    <select id="queryCategoryByPage" resultMap="categoryMap2">
+     select c1.id id,c1.cate_name name,c1.levels levels,c2.id cid,c2.cate_name cname,c2.levels clevels
+       from t_category c1 left join t_category c2 on c1.parent_id = c2.id order by c1.levels asc
+       limit ${pageNo},${pageSize}
+    </select>
+
+    <select id="queryCategoryParent" resultMap="categoryMap2">
+    select c1.id id,c1.cate_name name,c1.levels levels,c2.id cid,c2.cate_name cname,c2.levels clevels
+    from t_category c1 left join t_category c2 on c1.parent_id = c2.id where c1.id = #{id} order by c1.levels asc
+    </select>
+
+    <delete id="delete">
+        delete from t_category where id = #{id}
+    </delete>
+
+    <select id="selectListByPid" resultMap="categoryMap2">
+    select c1.id id,c1.cate_name name,c1.levels levels,c2.id cid,c2.cate_name cname,c2.levels clevels
+    from t_category c1 left join t_category c2 on c1.parent_id = c2.id where c1.parent_id = #{pid} order by c1.levels asc
+    </select>
+</mapper>

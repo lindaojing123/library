@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+
+	<!--
+	    1、mybatis可以使用properties来引入外部properties配置文件的内容；
+	    resource：引入类路径下的资源
+	    url：引入网络路径或者磁盘路径下的资源
+	-->
+	<properties resource="db.properties"></properties>
+
+	<!--
+		2、settings包含很多重要的设置项
+		setting:用来设置每一个设置项
+			name：设置项名
+			value：设置项取值
+	 -->
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<!--显示的指定每个我们需要更改的配置的值，即使他是默认的。防止版本更新带来的问题  -->
+		<setting name="lazyLoadingEnabled" value="true"/>
+		<setting name="aggressiveLazyLoading" value="false"/>
+		<!--二级缓存-->
+		<setting name="cacheEnabled" value="true"/>
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+		<setting name="logImpl" value="STDOUT_LOGGING" />
+	</settings>
+
+	<typeAliases>
+		<package name="com.entity"/>
+
+		<!-- 3、批量起别名的情况下，使用@Alias注解为某个类型指定新的别名 -->
+	</typeAliases>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+			</dataSource>
+		</environment>
+	</environments>
+
+
+	<databaseIdProvider type="DB_VENDOR">
+		<!-- 为不同的数据库厂商起别名 -->
+		<property name="MySQL" value="mysql"/>
+		<property name="Oracle" value="oracle"/>
+		<property name="SQL Server" value="sqlserver"/>
+	</databaseIdProvider>
+
+
+	<mappers>
+		<mapper resource="mapper/categoryMapper.xml"/>
+		<mapper resource="mapper/bookMapper.xml"/>
+		<mapper resource="mapper/userMapper.xml"/>
+		<mapper resource="mapper/adminMapper.xml"/>
+		<mapper resource="mapper/addressMapper.xml"/>
+		<mapper resource="mapper/orderMapper.xml"/>
+		<!-- 批量注册： -->
+	<!--<package name="com.mybatis.dao"/>-->
+	</mappers>
+</configuration>

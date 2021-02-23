@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="main" extends="struts-default" namespace="/main">
+        <action name="*" class="com.web.MainAction" method="{1}">
+            <result name="{1}">/front/main/main.jsp</result>
+            <result name="bookList">/front/main/bookList.jsp</result>
+            <result name="bookDetail">/front/main/bookDetail.jsp</result>
+        </action>
+    </package>
+
+</struts>

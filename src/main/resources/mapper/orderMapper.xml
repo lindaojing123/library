@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.OrderDao">
+    <insert id="addOrderItem" useGeneratedKeys="true" keyProperty="id">
+      insert into t_item (book_name,book_src,price,num,amount,book_id,order_id)
+      values(#{bookName},#{bookSrc},#{price},#{num},#{amount},#{bookId},#{orderId})
+    </insert>
+
+    <insert id="addOrder" useGeneratedKeys="true" keyProperty="id">
+       insert into t_order(order_number,order_times,addr_user,addr_name,total_price
+       ,addr_id,user_id,is_pay)values (#{orderNumber},#{orderTimes},#{addrUser},#{addrName},
+       #{totalPrice},#{addrId},#{userId},0)
+    </insert>
+
+    <select id="getAllOrder" resultType="Order">
+        select * from t_order
+    </select>
+
+    <select id="getAllOrderItemByOid" resultType="OrderItem">
+        select * from t_item where order_id = #{orderId}
+    </select>
+
+    <select id="selectOrderById" resultType="Order">
+        select * from t_order where id = #{id}
+    </select>
+</mapper>

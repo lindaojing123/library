@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.BookDao">
+
+    <select id="getAllBooks" resultType="Book" >
+        select * from t_book;
+    </select>
+
+    <select id="selectById" resultType="Book">
+        select * from t_book where id = #{id}
+    </select>
+
+    <select id="getTotalSize" resultType="java.lang.Integer">
+        select count(*) from t_book t where
+        <choose>
+            <when test="searchId=='name'">
+                t.book_name like '%${searchName}%'
+            </when>
+            <when test="searchId=='author'">
+                t.author like '%${searchName}%'
+            </when>
+            <when test="searchId=='press'">
+                t.company like '%${searchName}%'
+            </when>
+            <otherwise>1=1</otherwise>
+        </choose>
+    </select>
+
+    <select id="getTotalSizeByCid" resultType="java.lang.Integer">
+        select count(*) from t_book t where cate_id=#{c2id}
+    </select>
+
+    <select id="queryBookLike" resultType="Book">
+        select * from t_book t where
+        <choose>
+            <when test="searchId=='name'">
+                t.book_name like '%${searchName}%'
+            </when>
+            <when test="searchId=='author'">
+                t.author like '%${searchName}%'
+            </when>
+            <when test="searchId=='press'">
+                t.company like '%${searchName}%'
+            </when>
+            <otherwise>1=1</otherwise>
+        </choose>
+        limit ${pageNo},${pageSize}
+    </select>
+
+    <select id="getBookSort" resultType="Book">
+        select * from t_book t where cate_id=#{c2id}
+        <choose>
+            <when test="searchId=='select_time'">
+                order by t.publish_time desc
+            </when>
+            <when test="searchId=='select_price_desc'">
+                order by t.dd_price desc
+            </when>
+            <when test="searchId=='select_price_asc'">
+                order by t.dd_price asc
+            </when>
+        </choose>
+        limit ${pageNo},${pageSize}
+    </select>
+
+    <delete id="deleteOne">
+        delete from t_book where id=#{id}
+    </delete>
+
+    <insert id="addBook" keyProperty="id" useGeneratedKeys="true">
+         insert into t_book(book_name,page_num,word_num,price,src,dd_price,stock,author,editor_recommend,company,publish_time,
+         content_abstract,edition,print_time,author_abstract,print_count,isbn,director,sizes,paper,media_commentary,pack,cate_id,sale_count)
+         values(#{bookName},#{pageNum},#{wordNum},#{price} ,#{src},#{ddPrice},#{stock},#{author},#{editorRecommend},
+         #{company},#{publishTime},#{contentAbstract},#{edition},#{printTime},#{authorAbstract},#{printCount},#{isbn},#{director},
+         #{sizes},#{paper},#{mediaCommentary},#{pack},#{cateId},#{saleCount})
+    </insert>
+
+    <update id="updateBook">
+		update t_book
+		<set>
+            <if test="src!=null"> src=#{src},</if>
+            <if test="bookName!=null"> book_name=#{bookName},</if>
+            <if test="pageNum!=null"> page_num=#{pageNum},</if>
+            <if test="wordNum!=null"> word_num=#{wordNum},</if>
+            <if test="price!=null"> price=#{price},</if>
+            <if test="ddPrice!=null"> dd_price=#{ddPrice},</if>
+            <if test="stock!=null"> stock=#{stock},</if>
+            <if test="author!=null"> author=#{author},</if>
+            <if test="editorRecommend!=null"> editor_recommend=#{editorRecommend},</if>
+            <if test="company!=null"> company=#{company},</if>
+            <if test="publishTime!=null"> publish_time=#{publishTime},</if>
+            <if test="contentAbstract!=null"> content_abstract=#{contentAbstract},</if>
+            <if test="edition!=null"> edition=#{edition},</if>
+            <if test="printTime!=null"> print_time=#{printTime},</if>
+            <if test="authorAbstract!=null"> author_abstract=#{authorAbstract},</if>
+            <if test="printCount!=null"> print_count=#{printCount},</if>
+            <if test="isbn!=null"> isbn=#{isbn},</if>
+            <if test="director!=null">director=#{director},</if>
+            <if test="sizes!=null"> sizes=#{sizes},</if>
+            <if test="paper!=null">paper=#{paper},</if>
+            <if test="mediaCommentary!=null"> media_commentary=#{mediaCommentary},</if>
+            <if test="pack">pack=#{pack},</if>
+            <if test="cateId">cate_id=#{cateId},</if>
+            <if test="saleCount">sale_count=#{saleCount},</if>
+        </set>
+		where id = #{id}
+	</update>
+
+    <select id="getBookByTime" resultType="Book">
+        select *  from t_book order by publish_time desc limit 0,8;
+    </select>
+
+    <select id="getBookBySale" resultType="Book">
+        select * from t_book order by sale_count desc limit 0,8;
+    </select>
+
+    <select id="getListByCid" resultType="Book">
+        select * from t_book where cate_id = #{cid}
+    </select>
+
+</mapper>
